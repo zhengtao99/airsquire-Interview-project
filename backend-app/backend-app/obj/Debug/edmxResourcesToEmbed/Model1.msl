@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="AirsquireChallengeDBModelStoreContainer" CdmEntityContainer="AirsquireChallengeDBEntities">
+    <EntitySetMapping Name="PanoramaBookmarks">
+      <EntityTypeMapping TypeName="AirsquireChallengeDBModel.PanoramaBookmark">
+        <MappingFragment StoreEntitySet="PanoramaBookmarks">
+          <ScalarProperty Name="PanoramaId" ColumnName="PanoramaId" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="IsBookmarked" ColumnName="IsBookmarked" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Panoramas">
+      <EntityTypeMapping TypeName="AirsquireChallengeDBModel.Panorama">
+        <MappingFragment StoreEntitySet="Panoramas">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ImageTitle" ColumnName="ImageTitle" />
+          <ScalarProperty Name="ImageFilename" ColumnName="ImageFilename" />
+          <ScalarProperty Name="UploadedBy" ColumnName="UploadedBy" />
+          <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
