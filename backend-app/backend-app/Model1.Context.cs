@@ -25,6 +25,7 @@ namespace backend_app
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Config> Configs { get; set; }
         public virtual DbSet<PanoramaBookmark> PanoramaBookmarks { get; set; }
         public virtual DbSet<Panorama> Panoramas { get; set; }
     }

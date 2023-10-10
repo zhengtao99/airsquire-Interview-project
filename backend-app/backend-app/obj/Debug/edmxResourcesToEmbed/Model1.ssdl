@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="AirsquireChallengeDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Configs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="Value" Type="nvarchar(max)" />
+  </EntityType>
   <EntityType Name="PanoramaBookmarks">
     <Key>
       <PropertyRef Name="PanoramaId" />
@@ -31,6 +39,7 @@
     </ReferentialConstraint>
   </Association>
   <EntityContainer Name="AirsquireChallengeDBModelStoreContainer">
+    <EntitySet Name="Configs" EntityType="Self.Configs" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PanoramaBookmarks" EntityType="Self.PanoramaBookmarks" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Panoramas" EntityType="Self.Panoramas" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_PanoramaBookmarks_Panoramas" Association="Self.FK_PanoramaBookmarks_Panoramas">

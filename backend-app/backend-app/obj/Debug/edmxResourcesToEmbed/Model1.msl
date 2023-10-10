@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="AirsquireChallengeDBModelStoreContainer" CdmEntityContainer="AirsquireChallengeDBEntities">
+    <EntitySetMapping Name="Configs">
+      <EntityTypeMapping TypeName="AirsquireChallengeDBModel.Config">
+        <MappingFragment StoreEntitySet="Configs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="PanoramaBookmarks">
       <EntityTypeMapping TypeName="AirsquireChallengeDBModel.PanoramaBookmark">
         <MappingFragment StoreEntitySet="PanoramaBookmarks">

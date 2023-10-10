@@ -1,7 +1,11 @@
 
-const api = {
-    get: (url:string) => {request(url)},
-    post: (url: string, body: {}) => request(url, {method:'POST', ...body})
+const panoramasRequest = {
+    get: (url: string) => request(url, {
+            method:'GET'}),
+    post: (url: string, body: {}) => request(url, {
+            method:'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)})
 }
 
 
@@ -14,4 +18,4 @@ async function request<TResponse>(
       .then((data) => data as TResponse);
   }
 
-  export default api;
+  export default panoramasRequest;
