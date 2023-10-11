@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using backend_app.Models;
+using backend_app.Models.PanoramaApiModels;
 
 namespace backend_app.Controllers.Apis
 {
@@ -26,14 +26,14 @@ namespace backend_app.Controllers.Apis
         [EnableCors(origins: ConfigController.CorsAllowedUrl, headers: "*", methods: "GET")]
         [Route("api/panoramas")]
         [HttpGet]
-        public IHttpActionResult GetParonamas([FromUri] PanoramaApiModels.GetPanoramas.ParamModel paramModel)
+        public IHttpActionResult GetParonamas([FromUri] GetPanoramas.ParamModel paramModel)
         {
             using (AirsquireChallengeDBEntities entities = new AirsquireChallengeDBEntities())
             {
                 string imagePath = entities.Configs.Where(z => z.Name == "ImagePath").FirstOrDefault().Value;
                 var panoramas = entities.Panoramas.AsEnumerable().GroupJoin(entities.PanoramaBookmarks, z => z.Id, y => y.PanoramaId, (z, y) =>
-                        new PanoramaApiModels.GetPanoramas.ResultModel() {
-                            Id = z.Id,
+                        new GetPanoramas.ResultModel() {
+                            PanoramaId = z.Id,
                             ImagePath = imagePath + z.ImageFilename,
                             ImageTitle = z.ImageTitle,
                             UploadedBy = z.UploadedBy,

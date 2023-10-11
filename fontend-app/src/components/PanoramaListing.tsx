@@ -49,7 +49,7 @@ function PanoramaListing(){
               // <Rating name="customized-10" defaultValue={1} max={1} />
               <Grid item xs={4} md={4}>
                 <PanoramaCard 
-                  id = {panorama.Id}
+                  panoramaId = {panorama.PanoramaId}
                   imageTitle = {panorama.ImageTitle}
                   uploadedBy = {panorama.UploadedBy}
                   uploadedDate = {panorama.UploadedDate}

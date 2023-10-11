@@ -171,6 +171,7 @@
     <Compile Include="Config.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\Apis\PanoramaBookmarkApiController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Apis\PanoramaApiController.cs" />
@@ -193,6 +194,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\PanoramaBookmarkApiModel.cs" />
     <Compile Include="Models\PanoramaApiModel.cs" />
     <Compile Include="Panorama.cs">
       <DependentUpon>Model1.tt</DependentUpon>

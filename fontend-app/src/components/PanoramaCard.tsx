@@ -7,22 +7,27 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import api from '../hooks/request';
 
 interface PanoramaCardProps {
-    id: number,
+    panoramaId: number,
     imageTitle: string,
     uploadedBy: string,
     uploadedDate: string,
     isBookmarked: boolean
-    // imagePath: string,
-    // uploadedBy: string,
-    // uploadedDate: string
 }
 
 export default function PanoramaCard(props: PanoramaCardProps) {
 
-    const [isBookmarked, setIsBookmarked] = useState<number>(0);
+    const username = "zhengtao";
+    const url = `https://localhost:44301/api/panoramabookmarks`;
 
+    
+
+    const [isBookmarked, setIsBookmarked] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     useEffect(()=>{
         if(props.isBookmarked)
         {
@@ -32,14 +37,24 @@ export default function PanoramaCard(props: PanoramaCardProps) {
 
     const handleClick = (e:any) => {
         e.preventDefault();
-        if(isBookmarked == 0)
-        {
-            setIsBookmarked(1);
-        }
-        else
-        {
-            setIsBookmarked(0);
-        }
+       
+        setIsLoading(true);
+        (async function() {
+            const parameters = {
+                "PanoramaId": props.panoramaId,
+                "Username": "zhengtao",
+                "IsBookmarked": isBookmarked == 1 ? false : true
+            };
+
+            const result = await api.put(url, parameters);
+            if(result == "success")
+            {
+                setIsBookmarked(isBookmarked == 1 ? 0: 1)
+                console.log("yes")
+            }
+            console.log(result)
+        })()
+        setIsLoading(false);
     }
 
 
@@ -63,7 +78,16 @@ export default function PanoramaCard(props: PanoramaCardProps) {
             </Typography>
         </CardContent>
         <CardActions>
-            <Button size="small" onClick={handleClick}><Rating name="customized-10" defaultValue={0} value={isBookmarked!} max={1} />Bookmark</Button>
+            <Button size="small" onClick={handleClick}>
+              
+                {isLoading ? (
+                    <CircularProgress size={12} thickness={10}/>
+                ):(
+                    <Rating name="customized-10" defaultValue={0} value={isBookmarked!} max={1} />
+                )}
+                Bookmark
+               
+            </Button>
         </CardActions>
         </Card>
     );
