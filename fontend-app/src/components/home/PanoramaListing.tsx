@@ -1,10 +1,6 @@
-
-
-
-
 import Grid from '@mui/material/Grid';
 import React, { useState, useEffect } from "react";
-import api from "../hooks/request";
+import api from "../../hooks/request";
 import PanoramaCard from './PanoramaCard';
 
 type Paronoma = {

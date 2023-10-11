@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import api from '../hooks/request';
+import api from '../../hooks/request';
 
 interface PanoramaCardProps {
     panoramaId: number,
@@ -38,8 +38,12 @@ export default function PanoramaCard(props: PanoramaCardProps) {
     const handleClick = (e:any) => {
         e.preventDefault();
        
-        setIsLoading(true);
+       
+       
         (async function() {
+            setIsLoading(true);
+            const timeout = setTimeout(() => {}, 1000)
+
             const parameters = {
                 "PanoramaId": props.panoramaId,
                 "Username": "zhengtao",
@@ -50,11 +54,11 @@ export default function PanoramaCard(props: PanoramaCardProps) {
             if(result == "success")
             {
                 setIsBookmarked(isBookmarked == 1 ? 0: 1)
-                console.log("yes")
             }
-            console.log(result)
+            setIsLoading(false);
         })()
-        setIsLoading(false);
+
+        
     }
 
 
@@ -62,7 +66,7 @@ export default function PanoramaCard(props: PanoramaCardProps) {
         <Card sx={{ maxWidth: 345 }}>
         <CardMedia
             sx={{ height: 140 }}
-            image={require("../images/building.jpg")}
+            image={require("../../images/building.jpg")}
             title={props.imageTitle}
         />
         <CardContent>
