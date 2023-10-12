@@ -9,7 +9,8 @@ namespace backend_app.Models.PanoramaApiModels
     {
         public class ParamModel
         {
-            public string Username { get; set; }
+            public string Username { get; set; } = "";
+            public string Title { get; set; } = "";
         }
         public class ResultModel
         {

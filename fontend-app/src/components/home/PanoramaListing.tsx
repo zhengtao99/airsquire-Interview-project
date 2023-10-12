@@ -1,41 +1,31 @@
+import { Refresh } from '@mui/icons-material';
 import Grid from '@mui/material/Grid';
 import React, { useState, useEffect } from "react";
 import api from "../../hooks/request";
 import PanoramaCard from './PanoramaCard';
 
-type Paronoma = {
-
+interface ParonomaListingProps{
+  isRefresh: boolean,
+  searchTitle: string
 }
 
-function PanoramaListing(){
+function PanoramaListing(props:ParonomaListingProps){
   
   const username = "zhengtao";
-  const url = `https://localhost:44301/api/panoramas?username=${username}`;
+  const url = `https://localhost:44301/api/panoramas?username=${username}&title=${props.searchTitle}`;
 
   const [data, setData] = useState<any>([]);
-
-  const requestOptions = {
-      // method: 'POST',
-      // headers: { 'Content-Type': 'application/json' },
-      // body: JSON.stringify({ title: 'React POST Request Example' })
-      Username: "zhengtao"
-  };
-
   
-
   useEffect(() => {
-    (async function() {
-        const apiData = await api.get(url);
-        setData(apiData);
-    })()
-  }, []);
+    refresh();
+  }, [props.isRefresh])
 
-  useEffect(() => {
+  function refresh(){
     (async function() {
-        const user = await api.post(url, requestOptions);
-        console.log(user)
+      const apiData = await api.get(url);
+      setData(apiData);
     })()
-  }, []);
+  }
   
     return(
        
@@ -43,7 +33,7 @@ function PanoramaListing(){
           {data.map((panorama:any, index:any) => {
             return(
               // <Rating name="customized-10" defaultValue={1} max={1} />
-              <Grid item xs={4} md={4}>
+              <Grid item xs={6} md={4}>
                 <PanoramaCard 
                   panoramaId = {panorama.PanoramaId}
                   imageTitle = {panorama.ImageTitle}

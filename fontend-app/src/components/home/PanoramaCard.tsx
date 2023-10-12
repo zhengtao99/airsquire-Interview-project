@@ -61,6 +61,9 @@ export default function PanoramaCard(props: PanoramaCardProps) {
         
     }
 
+    async function refresh(){
+        
+    }
 
     return (
         <Card sx={{ maxWidth: 345 }}>

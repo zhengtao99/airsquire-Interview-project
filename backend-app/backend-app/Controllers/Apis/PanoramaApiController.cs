@@ -30,21 +30,31 @@ namespace backend_app.Controllers.Apis
         {
             using (AirsquireChallengeDBEntities entities = new AirsquireChallengeDBEntities())
             {
+                if(paramModel.Title == null)
+                {
+                    paramModel.Title = "";
+                }
                 string imagePath = entities.Configs.Where(z => z.Name == "ImagePath").FirstOrDefault().Value;
-                var panoramas = entities.Panoramas.AsEnumerable().GroupJoin(entities.PanoramaBookmarks, z => z.Id, y => y.PanoramaId, (z, y) =>
-                        new GetPanoramas.ResultModel() {
-                            PanoramaId = z.Id,
-                            ImagePath = imagePath + z.ImageFilename,
-                            ImageTitle = z.ImageTitle,
-                            UploadedBy = z.UploadedBy,
-                            UploadedDate = UtilitiesController.TimeDescription(((DateTime)z.UploadedDate).ToLocalTime()),
-                            IsBookmarked = y.FirstOrDefault() == null ? false : 
-                                            y.FirstOrDefault().Username.ToLower() == paramModel.Username.ToLower() ? y.FirstOrDefault().IsBookmarked : false
 
-                        }).ToList();
+                // filter by panorama title
+                var panoramas = entities.Panoramas.Where(z => z.ImageTitle.Contains(paramModel.Title));
 
+                // order by latest uploaded
+                panoramas = panoramas.OrderByDescending(z => z.UploadedDate);
 
-                return Json(panoramas);
+                var results = panoramas.AsEnumerable().GroupJoin(entities.PanoramaBookmarks, z => z.Id, y => y.PanoramaId, (z, y) =>
+                    new GetPanoramas.ResultModel() {
+                        PanoramaId = z.Id,
+                        ImagePath = imagePath + z.ImageFilename,
+                        ImageTitle = z.ImageTitle,
+                        UploadedBy = z.UploadedBy,
+                        UploadedDate = UtilitiesController.TimeDescription(((DateTime)z.UploadedDate).ToLocalTime()),
+                        IsBookmarked = y.FirstOrDefault() == null ? false :
+                                        paramModel.Username == "" ? false :
+                                        y.FirstOrDefault().Username.ToLower() == paramModel.Username.ToLower() ? y.FirstOrDefault().IsBookmarked : false
+
+                    }).ToList();
+                return Json(results);
             }
         }
 
