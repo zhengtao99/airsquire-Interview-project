@@ -1,6 +1,8 @@
 using backend_app.Models;
 using Microsoft.AspNetCore.Mvc;
 using backend_app.Models.PanoramaApiModels;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace backend_app.Controllers.Apis
 {
@@ -49,6 +51,70 @@ namespace backend_app.Controllers.Apis
                     }).ToList();
 
                 return results;
+            }
+        }
+
+
+        [HttpPost(Name = "UploadPanorama")]
+        public async Task<object> Post (IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            string filename = Guid.NewGuid().ToString().Replace("-", "");
+
+
+            if(file.ContentType == "image/jpeg")
+            {
+                filename = filename + ".jpg";
+            }
+
+            else if (file.ContentType == "image/png")
+            {
+                filename = filename + ".png";
+            }
+            else
+            {
+                return BadRequest("Invalid file type");
+            }
+
+            var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Panoramas", filename);
+
+            using (Stream fileStream = new FileStream(filepath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+
+               
+            }
+            using (var image = Image.Load(file.OpenReadStream()))
+            {
+                var filepath_small = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Panoramas-Small", filename);
+                string newSize = ResizeImage(image, 274, 140);
+                string[] aSize = newSize.Split(',');
+                image.Mutate(h => h.Resize(Convert.ToInt32(aSize[1]), Convert.ToInt32(aSize[0])));
+                image.Save(filepath_small);
+            }
+
+
+
+
+            return new {success = "success"};
+        }
+
+        private string ResizeImage(Image img, int maxWidth, int maxHeight)
+        {
+            if (img.Width > maxWidth || img.Height > maxHeight)
+            {
+                double widthRatio = (double)img.Width / (double)maxWidth;
+                double heightRatio = (double)img.Height / (double)maxHeight;
+                double ratio = Math.Max(widthRatio, heightRatio);
+                int newWidth = (int)(img.Width / ratio);
+                int newHeight = (int)(img.Height / ratio);
+                return newHeight.ToString() + "," + newWidth.ToString();
+            }
+            else
+            {
+                return img.Height.ToString() + img.Width.ToString();
             }
         }
     }

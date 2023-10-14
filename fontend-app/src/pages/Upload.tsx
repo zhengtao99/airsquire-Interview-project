@@ -10,11 +10,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import api from "../hooks/request";
 import { useState, useEffect } from "react";
+import {apiEndPoint_Panoramas} from "../config";
 
 function Upload(){
-
-    const url = `https://localhost:44301/api/panoramas`;
-
     const [selectedImage, setSelectedImage] = useState<any>();
 
     function handleFileuploadChange(e:any){   
@@ -29,7 +27,7 @@ function Upload(){
         formData.append('file', selectedImage);
         console.log(selectedImage);
         (async function() {
-          const apiData = await api.post(url, formData);
+          const apiData = await api.post(apiEndPoint_Panoramas, formData);
         })()
       }
     return(

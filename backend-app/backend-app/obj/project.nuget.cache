@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "fSnPjx+djAZAnXsmY8NnO5NZyCi+e68uAAm+6k36kZV3+4c/gdZvOil/iDzynJv9gcuosKDKRKh2T+/fL3rbxg==",
+  "dgSpecHash": "V1x7lRWquGVLs/l4TvQzt1K7eDoqqQFnYIt+5nmFsUxp1naM/SI1Yq7oYNvL/YfAeEZ4W0LKXIzoDzTuAEDCRQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Lim Zheng Tao\\Documents\\GitHub\\airsquire-Interview-project\\backend-app\\backend-app\\backend-app.csproj",
   "expectedPackageFiles": [
@@ -43,6 +43,7 @@
     "C:\\Users\\Lim Zheng Tao\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\Lim Zheng Tao\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\Lim Zheng Tao\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\Lim Zheng Tao\\.nuget\\packages\\sixlabors.imagesharp\\3.0.2\\sixlabors.imagesharp.3.0.2.nupkg.sha512",
     "C:\\Users\\Lim Zheng Tao\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "C:\\Users\\Lim Zheng Tao\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
     "C:\\Users\\Lim Zheng Tao\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",

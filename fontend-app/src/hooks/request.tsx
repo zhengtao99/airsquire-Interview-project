@@ -2,9 +2,9 @@
 const panoramasRequest = {
     get: (url: string) => request(url, {
             method:'GET'}),
-    post: (url: string, formData: {}) => request(url, {
+    post: (url: string, formData: any) => request(url, {
             method:'POST',
-            body: JSON.stringify(formData)}),
+            body: formData}),
     put: (url: string, body: {}) => request(url, {
             method:'PUT',
             headers: { 'Content-Type': 'application/json' },
