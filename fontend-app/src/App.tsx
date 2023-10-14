@@ -1,23 +1,30 @@
 import React from 'react';
 import './App.css';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
 
-import { ReactComponent as MyLogo } from './images/static/mylogo.svg'
 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+
+import Layout from './pages/Layout';
 import Home  from './pages/Home';
-
+import NoPage  from './pages/NoPage';
+import Upload from './pages/Upload';
 function App() {
 
 
   return (
     <>
-      <Container maxWidth="md" sx={{mt:2}}>
-        <MyLogo />
-        <Divider sx={{mt:2, mb:2}}/>
+      
         
-        <Home/>
-      </Container>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="/upload" element={<Upload />} />
+              <Route path="*" element={<NoPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
     </>
   );
 }

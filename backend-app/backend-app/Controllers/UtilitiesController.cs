@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace backend_app.Controllers
 {
@@ -15,7 +11,7 @@ namespace backend_app.Controllers
 
             if (ts.Minutes < 1)
             {
-                if(ts.Seconds == 1)
+                if (ts.Seconds == 1)
                 {
                     return string.Format(ts.Seconds + " second ago");
                 }

@@ -1,36 +1,28 @@
-﻿using ApiServer.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Cors;
+using backend_app.Models;
+using Microsoft.AspNetCore.Mvc;
 using backend_app.Models.PanoramaApiModels;
 
 namespace backend_app.Controllers.Apis
 {
-    public class PanoramaApiController : ApiController
+    [ApiController]
+
+    [Route("api/panoramas")]
+    public class PanoramaApiController : ControllerBase
     {
-        //[EnableCors(origins: ConfigController.CorsAllowedUrl, headers: "*", methods: "GET")]
-        //[Route("api/paronamas")]
-        //public IHttpActionResult GetParonamas([FromUri]  PanoramaApiModel.GetPanoramaParamModel paramModel)
-        //{
-        //    using(AirsquireChallengeDBEntities entities = new AirsquireChallengeDBEntities())
-        //    {
+        private readonly ILogger<PanoramaApiController> _logger;
 
-        //    }
-        //    return null;
-        //}
-
-
-        [EnableCors(origins: ConfigController.CorsAllowedUrl, headers: "*", methods: "GET")]
-        [Route("api/panoramas")]
-        [HttpGet]
-        public IHttpActionResult GetParonamas([FromUri] GetPanoramas.ParamModel paramModel)
+        public PanoramaApiController(ILogger<PanoramaApiController> logger)
         {
-            using (AirsquireChallengeDBEntities entities = new AirsquireChallengeDBEntities())
+            _logger = logger;
+        }
+
+        [HttpGet(Name = "GetParonamas")]
+        public List<GetPanoramas.ResultModel> Get([FromQuery] GetPanoramas.ParamModel paramModel)
+        {
+
+            using (AirsquireChallengeDbContext entities = new AirsquireChallengeDbContext())
             {
-                if(paramModel.Title == null)
+                if (paramModel.Title == null)
                 {
                     paramModel.Title = "";
                 }
@@ -43,39 +35,21 @@ namespace backend_app.Controllers.Apis
                 panoramas = panoramas.OrderByDescending(z => z.UploadedDate);
 
                 var results = panoramas.AsEnumerable().GroupJoin(entities.PanoramaBookmarks, z => z.Id, y => y.PanoramaId, (z, y) =>
-                    new GetPanoramas.ResultModel() {
+                    new GetPanoramas.ResultModel()
+                    {
                         PanoramaId = z.Id,
                         ImagePath = imagePath + z.ImageFilename,
                         ImageTitle = z.ImageTitle,
                         UploadedBy = z.UploadedBy,
                         UploadedDate = UtilitiesController.TimeDescription(((DateTime)z.UploadedDate).ToLocalTime()),
                         IsBookmarked = y.FirstOrDefault() == null ? false :
-                                        paramModel.Username == "" ? false :
+                        paramModel.Username == "" ? false :
                                         y.FirstOrDefault().Username.ToLower() == paramModel.Username.ToLower() ? y.FirstOrDefault().IsBookmarked : false
 
                     }).ToList();
-                return Json(results);
+
+                return results;
             }
-        }
-
-
-        [EnableCors(origins: ConfigController.CorsAllowedUrl, headers: "*", methods: "POST")]
-        [Route("api/panoramas")]
-        [HttpPost]
-        public IHttpActionResult AddParonama()
-        {
-            using (AirsquireChallengeDBEntities entities = new AirsquireChallengeDBEntities())
-            {
-                Panorama panorama = new Panorama();
-                panorama.ImageTitle = "Building";
-                panorama.ImageFilename = "building.jpg";
-                panorama.UploadedBy = "zhengtao";
-                panorama.UploadedDate = DateTime.UtcNow;
-
-                entities.Panoramas.Add(panorama);
-                entities.SaveChanges();
-            }
-            return Ok("success");
         }
     }
 }

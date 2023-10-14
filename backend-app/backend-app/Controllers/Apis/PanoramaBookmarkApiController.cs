@@ -1,27 +1,30 @@
-﻿using ApiServer.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Cors;
-using backend_app.Models.PanoromaBookmarkApiModels;
+using backend_app.Models;
+using Microsoft.AspNetCore.Mvc;
+using backend_app.Models.PanoramaBookmarkApiModels;
 
 namespace backend_app.Controllers.Apis
 {
-    public class PanoramaBookmarkApiController : ApiController
+    [ApiController]
+
+    [Route("api/panoramabookmarks")]
+    public class PanoramaBookmarkApiController : ControllerBase
     {
-     
-        [EnableCors(origins: ConfigController.CorsAllowedUrl, headers: "*", methods: "PUT")]
-        [Route("api/panoramabookmarks")]
-        [HttpPut]
-        public IHttpActionResult UpdatePanoromaBookmark([FromBody] UpdatePanoromaBookmark.ParamModel paramModel)
+        private readonly ILogger<PanoramaApiController> _logger;
+
+        public PanoramaBookmarkApiController(ILogger<PanoramaApiController> logger)
         {
-            using (AirsquireChallengeDBEntities entities = new AirsquireChallengeDBEntities())
+            _logger = logger;
+        }
+
+        [HttpPut(Name = "UpdatePanoromaBookmark")]
+        public object Put([FromBody] UpdatePanoromaBookmark.ParamModel paramModel)
+        {
+
+            using (AirsquireChallengeDbContext entities = new AirsquireChallengeDbContext())
             {
                 var panoramaBookmark = entities.PanoramaBookmarks.Where(z => z.PanoramaId == paramModel.PanoramaId)
                                                                     .Where(z => z.Username == paramModel.Username).FirstOrDefault();
-                if(panoramaBookmark == null)
+                if (panoramaBookmark == null)
                 {
                     panoramaBookmark = new PanoramaBookmark();
                     panoramaBookmark.PanoramaId = paramModel.PanoramaId;
@@ -36,9 +39,8 @@ namespace backend_app.Controllers.Apis
 
                 entities.SaveChanges();
 
-                return Ok("success");
+                return  (new { success = "success" });
             }
         }
-
     }
 }

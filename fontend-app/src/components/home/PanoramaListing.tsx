@@ -1,8 +1,10 @@
-import { Refresh } from '@mui/icons-material';
 import Grid from '@mui/material/Grid';
 import React, { useState, useEffect } from "react";
 import api from "../../hooks/request";
 import PanoramaCard from './PanoramaCard';
+import { apiEndPoint_Panoramas } from '../../config';
+
+
 
 interface ParonomaListingProps{
   isRefresh: boolean,
@@ -12,7 +14,7 @@ interface ParonomaListingProps{
 function PanoramaListing(props:ParonomaListingProps){
   
   const username = "zhengtao";
-  const url = `https://localhost:44301/api/panoramas?username=${username}&title=${props.searchTitle}`;
+  const url = apiEndPoint_Panoramas + `?username=${username}`;
 
   const [data, setData] = useState<any>([]);
   
@@ -21,8 +23,13 @@ function PanoramaListing(props:ParonomaListingProps){
   }, [props.isRefresh])
 
   function refresh(){
+    let finalUrl = url;
+    if(props.searchTitle != "")
+    {
+        finalUrl = url + `&title='${props.searchTitle}'`;
+    }
     (async function() {
-      const apiData = await api.get(url);
+      const apiData = await api.get(finalUrl);
       setData(apiData);
     })()
   }
@@ -30,16 +37,18 @@ function PanoramaListing(props:ParonomaListingProps){
     return(
        
           <Grid container spacing={2}>
-          {data.map((panorama:any, index:any) => {
+          {data.map((panorama:any) => {
+            console.log(panorama)
             return(
-              // <Rating name="customized-10" defaultValue={1} max={1} />
-              <Grid item xs={6} md={4}>
+              <Grid item xs={6} md={4}  key={panorama.panoramaId}>
                 <PanoramaCard 
-                  panoramaId = {panorama.PanoramaId}
-                  imageTitle = {panorama.ImageTitle}
-                  uploadedBy = {panorama.UploadedBy}
-                  uploadedDate = {panorama.UploadedDate}
-                  isBookmarked = {panorama.IsBookmarked}
+                
+                  panoramaId = {panorama.panoramaId}
+                  imageTitle = {panorama.imageTitle}
+                  uploadedBy = {panorama.uploadedBy}
+                  uploadedDate = {panorama.uploadedDate}
+                  imagePath = {panorama.imagePath}
+                  isBookmarked = {panorama.isBookmarked}
                 />
               </Grid>
             )

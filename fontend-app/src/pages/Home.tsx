@@ -1,6 +1,6 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import AnalyticsButton from '../components/buttons/AnalyticsButton';
-import UploadButton from '../components/buttons/UploadButton';
+import PurpleButton from '../components/buttons/PurpleButton';
+import OrangeButton from '../components/buttons/OrangeButton';
 import PanoramaListing from '../components/home/PanoramaListing'
 import BarChartIcon from '@mui/icons-material/BarChart';
 
@@ -12,13 +12,15 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import DirectionsIcon from '@mui/icons-material/Directions';
+import {Link} from 'react-router-dom'
 import { useState, useEffect } from "react";
 
 function Home (){
 
     const [isRefresh, setIsRefresh] = useState<boolean>(false);
     const [searchTitle, setSearchTitle] = useState<string>("");
+
+    
 
     const handleSearchClick = (e:any) => {
         e.preventDefault();
@@ -31,14 +33,16 @@ function Home (){
 
     return (
         <>
-            <Grid sx={{mb:2}} container spacing={2} >
+            <Grid sx={{mb:4}} container spacing={2} >
                 <Grid item xs={12} md={4}>
-                    <UploadButton sx={{mr:2}} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                        Upload
-                    </UploadButton>
-                    <AnalyticsButton component="label" variant="contained" startIcon={<BarChartIcon />}>
+                    <Link to='/upload'>
+                        <OrangeButton sx={{mr:2}} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                            Upload
+                        </OrangeButton>
+                    </Link>
+                    <PurpleButton component="label" variant="contained" startIcon={<BarChartIcon />}>
                         Analytics
-                    </AnalyticsButton>
+                    </PurpleButton>
                 </Grid>
                 <Grid item xs={0} md={4}>
 
@@ -52,7 +56,7 @@ function Home (){
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Search Panorama Titles"
                     inputProps={{ 'aria-label': 'search google maps' }}
-                    onChange = {handleSearchTitleChange}
+                    onBlur = {handleSearchTitleChange}
                     />
                     <IconButton onClick={handleSearchClick} type="button" sx={{ p: '10px' }} aria-label="search">
                     <SearchIcon />

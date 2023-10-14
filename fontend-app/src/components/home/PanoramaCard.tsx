@@ -10,20 +10,21 @@ import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import api from '../../hooks/request';
+import {apiEndPoint_PanoramaBookmarks} from "../../config";
 
 interface PanoramaCardProps {
     panoramaId: number,
     imageTitle: string,
     uploadedBy: string,
     uploadedDate: string,
+    imagePath: string,
     isBookmarked: boolean
 }
 
 export default function PanoramaCard(props: PanoramaCardProps) {
 
     const username = "zhengtao";
-    const url = `https://localhost:44301/api/panoramabookmarks`;
-
+    const url = apiEndPoint_PanoramaBookmarks;
     
 
     const [isBookmarked, setIsBookmarked] = useState<number>(0);
@@ -51,7 +52,8 @@ export default function PanoramaCard(props: PanoramaCardProps) {
             };
 
             const result = await api.put(url, parameters);
-            if(result == "success")
+            console.log(result);
+            if(result)
             {
                 setIsBookmarked(isBookmarked == 1 ? 0: 1)
             }
@@ -69,7 +71,7 @@ export default function PanoramaCard(props: PanoramaCardProps) {
         <Card sx={{ maxWidth: 345 }}>
         <CardMedia
             sx={{ height: 140 }}
-            image={require("../../images/building.jpg")}
+            image={props.imagePath}
             title={props.imageTitle}
         />
         <CardContent>
