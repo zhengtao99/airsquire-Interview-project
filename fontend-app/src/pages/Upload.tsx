@@ -11,25 +11,87 @@ import Typography from '@mui/material/Typography';
 import api from "../hooks/request";
 import { useState, useEffect } from "react";
 import {apiEndPoint_Panoramas} from "../config";
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
+import { sleep } from '../utilities';
 
 function Upload(){
     const [selectedImage, setSelectedImage] = useState<any>();
+    const [panoramaTitle, setPanoramaTitle] = useState<string>("");
+    const [errorMsg, setErrorMsg] = useState<string>("");
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     function handleFileuploadChange(e:any){   
-        
+        setIsSuccess(false);
+        setErrorMsg("");
         setSelectedImage(e.target.files[0]);
+      
+    }
+
+    function handlePanoramaTitleClick(e:any)
+    {
+        setIsSuccess(false);
+        setErrorMsg("");
+    }
+
+    function validateFile(){
+        if(panoramaTitle == "")
+        {
+            const msg = "Please enter a panorama title.";
+            setErrorMsg(msg)
+            return msg;
+        }
+        if(selectedImage === undefined || !(selectedImage.type == "image/jpeg" || selectedImage.type ==  "image/png"))
+        {
+            const msg = "Please upload jpeg or png file only.";
+            setErrorMsg(msg)
+            return msg;
+        }
+        
+        return "";
     }
 
     function handleUploadClick(e:any){
-        e.preventDefault();
+        e.preventDefault();  
+        const errMsg = validateFile();
+        if(errMsg != "")
+        {
+            console.log("yes")
+            return;
+
+        }
+
+        console.log(selectedImage);
+
         const formData = new FormData();
 
-        formData.append('file', selectedImage);
-        console.log(selectedImage);
+        formData.append('File', selectedImage);
+        formData.append('PanoramaTitle', panoramaTitle);
+        formData.append('UploadedBy', "zhengtao");
+
+
         (async function() {
-          const apiData = await api.post(apiEndPoint_Panoramas, formData);
+
+            setIsLoading(true);
+
+            // simulate loading
+            await sleep(1000);
+            
+            const apiData:any = await api.post(apiEndPoint_Panoramas, formData);
+            if(apiData.success)
+            {
+                setIsSuccess(true);
+            }
+
+            setIsLoading(false);
         })()
-      }
+    }
+
+    function handlePanoramaTitleChange(e:any)
+    {
+        setPanoramaTitle(e.target.value);
+    }
     return(
         <>
             <Link to='/'>
@@ -45,7 +107,7 @@ function Upload(){
                             <Typography  variant="h6" sx={{mb:4}} >
                                 Upload a Panorama
                             </Typography>
-                            <TextField sx={{mb:4}} label="Panorama Title" size="small" fullWidth/>
+                            <TextField onClick={handlePanoramaTitleClick} onBlur={handlePanoramaTitleChange} sx={{mb:4}} label="Panorama Title" size="small" fullWidth/>
                             <Typography  variant="subtitle2" gutterBottom>
                                 Please ensure the image to have static width:height pixel ratio at 2:1.
                             </Typography>
@@ -56,7 +118,21 @@ function Upload(){
                                 name="myImage"
                                 onChange={handleFileuploadChange}
                             />
-
+                            {isLoading &&
+                            <Box>
+                                <CircularProgress  sx={{mt:4}} size={30}/>
+                            </Box>
+                            }
+                            {errorMsg != "" &&
+                                <Alert sx={{mt:2}} severity="error">
+                                    <strong>{errorMsg}</strong>
+                                </Alert>
+                            }
+                            {isSuccess &&
+                                <Alert sx={{mt:2}} severity="success">
+                                    <strong>The panorama has been successfully uploaded.</strong>
+                                </Alert>
+                            }
                             <OrangeButton onClick={handleUploadClick}  sx={{mt:4}} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                                 Upload
                             </OrangeButton>

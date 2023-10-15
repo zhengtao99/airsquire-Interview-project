@@ -10,7 +10,7 @@
         public class ResultModel
         {
             public int PanoramaId { get; set; }
-            public string ImageTitle { get; set; }
+            public string PanoramaTitle { get; set; }
             public string ImagePath { get; set; }
             public string UploadedBy { get; set; }
             public string UploadedDate { get; set; }
@@ -19,11 +19,14 @@
 
     }
 
-    public class AddPanoramaParamModel
+    public class UploadPanoramaParamModel
     {
-        public string ImageTitle { get; set; }
-        public string ImageFilename { get; set; }
-        public string UploadedBy { get; set; }
-        public string UploadedDate { get; set; }
+        public class ParamModel
+        {
+            public IFormFile File { get; set; }
+            public string PanoramaTitle { get; set; }
+            public string UploadedBy { get; set; }
+            
+        }
     }
 }

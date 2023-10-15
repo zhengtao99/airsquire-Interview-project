@@ -34,7 +34,7 @@ public partial class AirsquireChallengeDbContext : DbContext
 
         modelBuilder.Entity<Panorama>(entity =>
         {
-            entity.Property(e => e.ImageTitle).HasMaxLength(100);
+            entity.Property(e => e.PanoramaTitle).HasMaxLength(100);
             entity.Property(e => e.UploadedBy).HasMaxLength(50);
             entity.Property(e => e.UploadedDate).HasColumnType("datetime");
         });

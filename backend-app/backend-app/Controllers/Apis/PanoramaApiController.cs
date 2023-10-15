@@ -31,7 +31,7 @@ namespace backend_app.Controllers.Apis
                 string imagePath = entities.Configs.Where(z => z.Name == "ImagePath").FirstOrDefault().Value;
 
                 // filter by panorama title
-                var panoramas = entities.Panoramas.Where(z => z.ImageTitle.Contains(paramModel.Title));
+                var panoramas = entities.Panoramas.Where(z => z.PanoramaTitle.ToLower().Contains(paramModel.Title.ToLower()));
 
                 // order by latest uploaded
                 panoramas = panoramas.OrderByDescending(z => z.UploadedDate);
@@ -41,7 +41,7 @@ namespace backend_app.Controllers.Apis
                     {
                         PanoramaId = z.Id,
                         ImagePath = imagePath + z.ImageFilename,
-                        ImageTitle = z.ImageTitle,
+                        PanoramaTitle = z.PanoramaTitle,
                         UploadedBy = z.UploadedBy,
                         UploadedDate = UtilitiesController.TimeDescription(((DateTime)z.UploadedDate).ToLocalTime()),
                         IsBookmarked = y.FirstOrDefault() == null ? false :
@@ -56,20 +56,21 @@ namespace backend_app.Controllers.Apis
 
 
         [HttpPost(Name = "UploadPanorama")]
-        public async Task<object> Post (IFormFile file)
+        [DisableRequestSizeLimit]
+        public async Task<object> Post ([FromForm] UploadPanoramaParamModel.ParamModel model )
         {
-            if (file == null || file.Length == 0)
+            if (model.File == null || model.File.Length == 0)
                 return BadRequest("No file uploaded.");
 
             string filename = Guid.NewGuid().ToString().Replace("-", "");
 
 
-            if(file.ContentType == "image/jpeg")
+            if (model.File.ContentType == "image/jpeg")
             {
                 filename = filename + ".jpg";
             }
 
-            else if (file.ContentType == "image/png")
+            else if (model.File.ContentType == "image/png")
             {
                 filename = filename + ".png";
             }
@@ -78,44 +79,42 @@ namespace backend_app.Controllers.Apis
                 return BadRequest("Invalid file type");
             }
 
+            if(model.UploadedBy == "")
+            {
+                return BadRequest("Enter a username");
+            }
+
             var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Panoramas", filename);
 
             using (Stream fileStream = new FileStream(filepath, FileMode.Create))
             {
-                await file.CopyToAsync(fileStream);
-
-               
+                await model.File.CopyToAsync(fileStream);
             }
-            using (var image = Image.Load(file.OpenReadStream()))
+            using (var image = Image.Load(model.File.OpenReadStream()))
             {
                 var filepath_small = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Panoramas-Small", filename);
-                string newSize = ResizeImage(image, 274, 140);
+                string newSize = UtilitiesController.ResizeImage(image, 548, 280);
                 string[] aSize = newSize.Split(',');
                 image.Mutate(h => h.Resize(Convert.ToInt32(aSize[1]), Convert.ToInt32(aSize[0])));
                 image.Save(filepath_small);
             }
 
+            using(AirsquireChallengeDbContext entities  =  new AirsquireChallengeDbContext())
+            {
+                Panorama panorama = new Panorama();
+                panorama.ImageFilename = filename;
+                panorama.PanoramaTitle = model.PanoramaTitle;
+                panorama.UploadedBy = model.UploadedBy;
+                panorama.UploadedDate = DateTime.UtcNow;
 
+                entities.Panoramas.Add(panorama);
+                entities.SaveChanges();
+            }
 
 
             return new {success = "success"};
         }
 
-        private string ResizeImage(Image img, int maxWidth, int maxHeight)
-        {
-            if (img.Width > maxWidth || img.Height > maxHeight)
-            {
-                double widthRatio = (double)img.Width / (double)maxWidth;
-                double heightRatio = (double)img.Height / (double)maxHeight;
-                double ratio = Math.Max(widthRatio, heightRatio);
-                int newWidth = (int)(img.Width / ratio);
-                int newHeight = (int)(img.Height / ratio);
-                return newHeight.ToString() + "," + newWidth.ToString();
-            }
-            else
-            {
-                return img.Height.ToString() + img.Width.ToString();
-            }
-        }
+       
     }
 }

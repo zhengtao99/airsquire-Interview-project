@@ -7,7 +7,7 @@ public partial class Panorama
 {
     public int Id { get; set; }
 
-    public string? ImageTitle { get; set; }
+    public string? PanoramaTitle { get; set; }
 
     public string? ImageFilename { get; set; }
 

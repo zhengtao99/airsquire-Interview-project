@@ -8,13 +8,13 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import { sleep } from "../../utilities";
 import api from '../../hooks/request';
 import {apiEndPoint_PanoramaBookmarks} from "../../config";
 
 interface PanoramaCardProps {
     panoramaId: number,
-    imageTitle: string,
+    panoramaTitle: string,
     uploadedBy: string,
     uploadedDate: string,
     imagePath: string,
@@ -29,6 +29,7 @@ export default function PanoramaCard(props: PanoramaCardProps) {
 
     const [isBookmarked, setIsBookmarked] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
     useEffect(()=>{
         if(props.isBookmarked)
         {
@@ -43,7 +44,9 @@ export default function PanoramaCard(props: PanoramaCardProps) {
        
         (async function() {
             setIsLoading(true);
-            const timeout = setTimeout(() => {}, 1000)
+
+            // simulate loading
+            await sleep(1000);
 
             const parameters = {
                 "PanoramaId": props.panoramaId,
@@ -57,6 +60,7 @@ export default function PanoramaCard(props: PanoramaCardProps) {
             {
                 setIsBookmarked(isBookmarked == 1 ? 0: 1)
             }
+
             setIsLoading(false);
         })()
 
@@ -72,15 +76,15 @@ export default function PanoramaCard(props: PanoramaCardProps) {
         <CardMedia
             sx={{ height: 140 }}
             image={props.imagePath}
-            title={props.imageTitle}
+            title={props.panoramaTitle}
         />
         <CardContent>
         
             <Typography gutterBottom variant="h5" component="div">
-                {props.imageTitle}
+                {props.panoramaTitle}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-                Uploaded by {props.uploadedBy}
+                uploaded by {props.uploadedBy}
             </Typography>
             <Typography variant="body2" color="text.secondary">
             {props.uploadedDate}
