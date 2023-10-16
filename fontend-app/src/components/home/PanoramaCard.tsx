@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { sleep } from "../../utilities";
 import api from '../../hooks/request';
 import {apiEndPoint_PanoramaBookmarks} from "../../config";
+import axios from 'axios';
 
 interface PanoramaCardProps {
     panoramaId: number,
@@ -26,6 +27,7 @@ export default function PanoramaCard(props: PanoramaCardProps) {
     const username = "zhengtao";
     const url = apiEndPoint_PanoramaBookmarks;
     
+    const testUrl = "https://timesofindia.indiatimes.com/thumb/msid-70238371,imgsize-89579,width-400,resizemode-4/70238371.jpg";
 
     const [isBookmarked, setIsBookmarked] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -37,10 +39,8 @@ export default function PanoramaCard(props: PanoramaCardProps) {
         }
     }, [])
 
-    const handleClick = (e:any) => {
+    const handleBookmarkClick = (e:any) => {
         e.preventDefault();
-       
-       
        
         (async function() {
             setIsLoading(true);
@@ -67,8 +67,22 @@ export default function PanoramaCard(props: PanoramaCardProps) {
         
     }
 
-    async function refresh(){
+    const handleDownloadClick = (e:any) => {
+        e.preventDefault();
         
+        (async function() {
+            const imageUrl_HD = props.imagePath.replace("panoramas-small", "panoramas");
+            let results = await axios({
+                url: imageUrl_HD,
+                method: 'GET',
+                responseType: 'blob'
+             })
+             let hidden_a = document.createElement('a');
+             hidden_a.href = window.URL.createObjectURL(new Blob([results.data]));
+             hidden_a.setAttribute('download', `${props.panoramaTitle}.jpg`);
+             document.body.appendChild(hidden_a);
+             hidden_a.click();
+        })()
     }
 
     return (
@@ -91,7 +105,7 @@ export default function PanoramaCard(props: PanoramaCardProps) {
             </Typography>
         </CardContent>
         <CardActions>
-            <Button size="small" onClick={handleClick}>
+            <Button size="small" onClick={handleBookmarkClick}>
               
                 {isLoading ? (
                     <CircularProgress size={12} thickness={10}/>
@@ -100,7 +114,8 @@ export default function PanoramaCard(props: PanoramaCardProps) {
                 )}
                 Bookmark
                
-            </Button>
+            </Button> 
+            <Button onClick={handleDownloadClick} size="small">Download</Button>
         </CardActions>
         </Card>
     );

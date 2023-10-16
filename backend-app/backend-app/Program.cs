@@ -32,7 +32,13 @@ app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
                 Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
-    RequestPath = "/Uploads"
+    RequestPath = "/Uploads",
+    OnPrepareResponse = ctx => {
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Headers",
+          "Origin, X-Requested-With, Content-Type, Accept");
+    },
+
 });
 
 ////Enable directory browsing
