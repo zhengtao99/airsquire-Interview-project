@@ -6,6 +6,9 @@ import { apiEndPoint_Panoramas } from '../../config';
 import { sleep } from '../../utilities';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 interface ParonomaListingProps{
   isRefresh: boolean,
@@ -16,9 +19,13 @@ function PanoramaListing(props:ParonomaListingProps){
   
   const username = "zhengtao";
   const url = apiEndPoint_Panoramas + `?username=${username}`;
+  const [isBookedmarkedChecked, setIsBookmarkedChecked] = useState<boolean>(true);
+  const [isUnbookmarkedChecked, setIsUnbookmarkedChecked] = useState<boolean>(true);
+  const [bookmarkCount, setBookmarkedCount]  = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [data, setData] = useState<any>([]);
+  const [filteredData, setFilteredData] = useState<any>([]);
   
   useEffect(() => {
     refresh();
@@ -36,15 +43,49 @@ function PanoramaListing(props:ParonomaListingProps){
       // simulate loading
       await sleep(1000);
 
-      const apiData = await api.get(finalUrl);
+      const apiData:any = await api.get(finalUrl);
       setData(apiData);
-
+      setBookmarkedCount([...apiData].filter(x => x.isBookmarked).length)
       setIsLoading(false);
     })()
   }
+
+  useEffect(() => {
+    if(isBookedmarkedChecked && isUnbookmarkedChecked)
+    {
+      setFilteredData(data);
+    }
+    else if(isBookedmarkedChecked)
+    {
+      setFilteredData([...data].filter(x => x.isBookmarked))
+    }
+    else if(isUnbookmarkedChecked)
+    {
+      setFilteredData([...data].filter(x => x.isBookmarked == false))
+    }
+    else{
+      setFilteredData([])
+    }
+   
+  }, [data, isBookedmarkedChecked, isUnbookmarkedChecked])
   
+  const handleBookmarkedCheckedChange = (e:any) => {
+    setIsBookmarkedChecked(!isBookedmarkedChecked);
+  }
+
+  const handleUnbookmarkedCheckedChange = (e:any) => {
+    setIsUnbookmarkedChecked(!isUnbookmarkedChecked);
+  }
     return(
-       
+        <>
+          <Grid sx={{mb:2}} container spacing={2} >
+            <Grid item xs={12} md={12}>
+              <FormGroup row>
+                  <FormControlLabel control={<Checkbox onChange={handleBookmarkedCheckedChange} checked={isBookedmarkedChecked} />} label={`Bookmarked (${bookmarkCount})`} />
+                  <FormControlLabel control={<Checkbox onChange={handleUnbookmarkedCheckedChange} checked={isUnbookmarkedChecked} />} label={`Un-bookmarked (${data.length-bookmarkCount})`} />
+              </FormGroup>
+              </Grid>
+            </Grid>
           <Grid container spacing={2}>
 
             {isLoading ? (
@@ -57,7 +98,7 @@ function PanoramaListing(props:ParonomaListingProps){
                   <CircularProgress size={100}/>
               </Container>
             ):(
-              data.map((panorama:any) => {
+              filteredData.map((panorama:any) => {
               console.log(panorama)
               return(
                 <Grid item xs={6} md={4}  key={panorama.panoramaId}>
@@ -75,7 +116,7 @@ function PanoramaListing(props:ParonomaListingProps){
             })
           )}
          </Grid>
-      
+        </>
     )
 }
 

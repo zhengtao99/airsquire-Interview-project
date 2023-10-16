@@ -26,8 +26,6 @@ export default function PanoramaCard(props: PanoramaCardProps) {
 
     const username = "zhengtao";
     const url = apiEndPoint_PanoramaBookmarks;
-    
-    const testUrl = "https://timesofindia.indiatimes.com/thumb/msid-70238371,imgsize-89579,width-400,resizemode-4/70238371.jpg";
 
     const [isBookmarked, setIsBookmarked] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
