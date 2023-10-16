@@ -21,7 +21,7 @@ function PanoramaListing(props:ParonomaListingProps){
   const url = apiEndPoint_Panoramas + `?username=${username}`;
   const [isBookedmarkedChecked, setIsBookmarkedChecked] = useState<boolean>(true);
   const [isUnbookmarkedChecked, setIsUnbookmarkedChecked] = useState<boolean>(true);
-  const [bookmarkCount, setBookmarkedCount]  = useState<number>(0);
+  const [bookmarkedCount, setBookmarkedCount]  = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [data, setData] = useState<any>([]);
@@ -81,8 +81,8 @@ function PanoramaListing(props:ParonomaListingProps){
           <Grid sx={{mb:2}} container spacing={2} >
             <Grid item xs={12} md={12}>
               <FormGroup row>
-                  <FormControlLabel control={<Checkbox onChange={handleBookmarkedCheckedChange} checked={isBookedmarkedChecked} />} label={`Bookmarked (${bookmarkCount})`} />
-                  <FormControlLabel control={<Checkbox onChange={handleUnbookmarkedCheckedChange} checked={isUnbookmarkedChecked} />} label={`Un-bookmarked (${data.length-bookmarkCount})`} />
+                  <FormControlLabel control={<Checkbox onChange={handleBookmarkedCheckedChange} checked={isBookedmarkedChecked} />} label={`Bookmarked (${bookmarkedCount})`} />
+                  <FormControlLabel control={<Checkbox onChange={handleUnbookmarkedCheckedChange} checked={isUnbookmarkedChecked} />} label={`Un-bookmarked (${data.length - bookmarkedCount})`} />
               </FormGroup>
               </Grid>
             </Grid>
@@ -110,6 +110,8 @@ function PanoramaListing(props:ParonomaListingProps){
                     uploadedDate = {panorama.uploadedDate}
                     imagePath = {panorama.imagePath}
                     isBookmarked = {panorama.isBookmarked}
+                    bookmarkedCount = {bookmarkedCount}
+                    setBookmarkedCount = {setBookmarkedCount}
                   />
                 </Grid>
               )

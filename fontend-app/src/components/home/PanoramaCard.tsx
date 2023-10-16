@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -19,7 +19,9 @@ interface PanoramaCardProps {
     uploadedBy: string,
     uploadedDate: string,
     imagePath: string,
-    isBookmarked: boolean
+    isBookmarked: boolean,
+    bookmarkedCount: number,
+    setBookmarkedCount: Dispatch<SetStateAction<number>>
 }
 
 export default function PanoramaCard(props: PanoramaCardProps) {
@@ -56,7 +58,16 @@ export default function PanoramaCard(props: PanoramaCardProps) {
             console.log(result);
             if(result)
             {
-                setIsBookmarked(isBookmarked == 1 ? 0: 1)
+                if(isBookmarked == 1)
+                {
+                    setIsBookmarked(0)
+                    props.setBookmarkedCount(props.bookmarkedCount - 1);
+                }
+                else{
+                    setIsBookmarked(1)
+                    props.setBookmarkedCount(props.bookmarkedCount + 1);
+                }
+                
             }
 
             setIsLoading(false);
