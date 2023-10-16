@@ -42,15 +42,20 @@ function PanoramaListing(props:ParonomaListingProps){
 
       // simulate loading
       await sleep(1000);
-
+      try{
       const apiData:any = await api.get(finalUrl);
       setData(apiData);
-      setBookmarkedCount([...apiData].filter(x => x.isBookmarked).length)
+     
+      }catch{
+
+      }
       setIsLoading(false);
     })()
   }
 
   useEffect(() => {
+    console.log("triggered")
+    setBookmarkedCount([...data].filter(x => x.isBookmarked).length)
     if(isBookedmarkedChecked && isUnbookmarkedChecked)
     {
       setFilteredData(data);
@@ -110,8 +115,8 @@ function PanoramaListing(props:ParonomaListingProps){
                     uploadedDate = {panorama.uploadedDate}
                     imagePath = {panorama.imagePath}
                     isBookmarked = {panorama.isBookmarked}
-                    bookmarkedCount = {bookmarkedCount}
-                    setBookmarkedCount = {setBookmarkedCount}
+                    data = {data}
+                    setData = {setData}
                   />
                 </Grid>
               )

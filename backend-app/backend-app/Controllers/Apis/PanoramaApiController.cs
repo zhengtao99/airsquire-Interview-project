@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using backend_app.Models.PanoramaApiModels;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
+using Leadtools.Codecs;
 
 namespace backend_app.Controllers.Apis
 {
@@ -59,6 +60,7 @@ namespace backend_app.Controllers.Apis
         [DisableRequestSizeLimit]
         public async Task<object> Post ([FromForm] UploadPanoramaParamModel.ParamModel model )
         {
+            // Validations
             if (model.File == null || model.File.Length == 0)
                 return BadRequest("No file uploaded.");
 
@@ -84,12 +86,14 @@ namespace backend_app.Controllers.Apis
                 return BadRequest("Enter a username");
             }
 
+            // Save images to directory
             var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Panoramas", filename);
-
             using (Stream fileStream = new FileStream(filepath, FileMode.Create))
             {
                 await model.File.CopyToAsync(fileStream);
             }
+
+            // Save images to directory for compressed panorama images
             using (var image = Image.Load(model.File.OpenReadStream()))
             {
                 var filepath_small = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Panoramas-Small", filename);
@@ -99,7 +103,9 @@ namespace backend_app.Controllers.Apis
                 image.Save(filepath_small);
             }
 
-            using(AirsquireChallengeDbContext entities  =  new AirsquireChallengeDbContext())
+
+            // Save info to database
+            using (AirsquireChallengeDbContext entities  =  new AirsquireChallengeDbContext())
             {
                 Panorama panorama = new Panorama();
                 panorama.ImageFilename = filename;
@@ -115,6 +121,7 @@ namespace backend_app.Controllers.Apis
             return new {success = "success"};
         }
 
-       
+
+
     }
 }

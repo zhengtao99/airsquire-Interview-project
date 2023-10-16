@@ -12,6 +12,8 @@ import { sleep } from "../../utilities";
 import api from '../../hooks/request';
 import {apiEndPoint_PanoramaBookmarks} from "../../config";
 import axios from 'axios';
+import Chip from '@mui/material-next/Chip';
+import Stack from '@mui/material/Stack';
 
 interface PanoramaCardProps {
     panoramaId: number,
@@ -20,23 +22,48 @@ interface PanoramaCardProps {
     uploadedDate: string,
     imagePath: string,
     isBookmarked: boolean,
-    bookmarkedCount: number,
-    setBookmarkedCount: Dispatch<SetStateAction<number>>
+    data: any[],
+    setData: React.Dispatch<any>
 }
 
 export default function PanoramaCard(props: PanoramaCardProps) {
 
-    const username = "zhengtao";
     const url = apiEndPoint_PanoramaBookmarks;
 
     const [isBookmarked, setIsBookmarked] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [fileType, setFileType] = useState<string>("");
+    const [imageDimension, setImageDimension] = useState<string>("");
 
     useEffect(()=>{
         if(props.isBookmarked)
         {
             setIsBookmarked(1);
         }
+
+        if( props.imagePath.split('.').pop() == "jpg")
+        {
+            setFileType("JPEG");
+        }
+        
+        if( props.imagePath.split('.').pop() == "png")
+        {
+            setFileType("PNG");
+        }
+       
+        
+
+        (async function() {
+            try{
+                let image = new Image()
+                image.src = props.imagePath.replace("panoramas-small", "panoramas");
+                await image.decode()     
+                setImageDimension(`${image.width} x ${image.height}`);
+            }
+            catch{
+
+            }
+        })()
     }, [])
 
     const handleBookmarkClick = (e:any) => {
@@ -55,21 +82,24 @@ export default function PanoramaCard(props: PanoramaCardProps) {
             };
 
             const result = await api.put(url, parameters);
-            console.log(result);
             if(result)
             {
+                const objIndex = props.data.findIndex((obj => obj.panoramaId == props.panoramaId));
                 if(isBookmarked == 1)
                 {
                     setIsBookmarked(0)
-                    props.setBookmarkedCount(props.bookmarkedCount - 1);
+                    props.data[objIndex].isBookmarked = false;
                 }
                 else{
                     setIsBookmarked(1)
-                    props.setBookmarkedCount(props.bookmarkedCount + 1);
+                    props.data[objIndex].isBookmarked = true;
                 }
                 
+                // props.setData(props.data)
+                
             }
-
+            props.setData([...props.data]);
+           
             setIsLoading(false);
         })()
 
@@ -102,10 +132,15 @@ export default function PanoramaCard(props: PanoramaCardProps) {
             title={props.panoramaTitle}
         />
         <CardContent>
-        
             <Typography gutterBottom variant="h5" component="div">
                 {props.panoramaTitle}
             </Typography>
+            <Stack direction="row" spacing={1} sx={{mb:2}}>
+                <Chip size="small" label={fileType} color="tertiary" variant="filled" />
+                {imageDimension != "" &&
+                    <Chip size="small" label={imageDimension} color="primary" variant="filled" />
+                }
+            </Stack>
             <Typography variant="body2" color="text.secondary">
                 uploaded by {props.uploadedBy}
             </Typography>
