@@ -16,6 +16,7 @@ import axios from 'axios';
 import Chip from '@mui/material-next/Chip';
 import Stack from '@mui/material/Stack';
 import Panorama360View from "../Panorama360View";
+import {connect} from "react-redux";
 
 interface PanoramaCardProps {
     panoramaId: number,
@@ -28,7 +29,13 @@ interface PanoramaCardProps {
     setData: React.Dispatch<any>
 }
 
-export default function PanoramaCard(props: PanoramaCardProps) {
+const mapStateToProps = (state) =>{
+    return {
+        username: state.username
+    }
+  }
+
+function PanoramaCard(props:PanoramaCardProps) {
 
     const url = apiEndPoint_PanoramaBookmarks;
 
@@ -39,6 +46,7 @@ export default function PanoramaCard(props: PanoramaCardProps) {
     const [isOpenDialogue, setIsOpenDialogue]= useState<boolean>(false);
 
     useEffect(()=>{
+        console.log(props.isBookmarked);
         if(props.isBookmarked)
         {
             setIsBookmarked(1);
@@ -64,7 +72,6 @@ export default function PanoramaCard(props: PanoramaCardProps) {
                 setImageDimension(`${image.width} x ${image.height}`);
             }
             catch(err:any){
-                console.log(err.message)
             }
         })()
     }, [])
@@ -80,7 +87,7 @@ export default function PanoramaCard(props: PanoramaCardProps) {
 
             const parameters = {
                 "PanoramaId": props.panoramaId,
-                "Username": "zhengtao",
+                "Username": props.username,
                 "IsBookmarked": isBookmarked == 1 ? false : true
             };
 
@@ -97,16 +104,11 @@ export default function PanoramaCard(props: PanoramaCardProps) {
                     setIsBookmarked(1)
                     props.data[objIndex].isBookmarked = true;
                 }
-                
-                // props.setData(props.data)
-                
             }
             props.setData([...props.data]);
            
             setIsLoading(false);
-        })()
-
-        
+        })()   
     }
 
     const handleDownloadClick = (e:any) => {
@@ -177,3 +179,5 @@ export default function PanoramaCard(props: PanoramaCardProps) {
         </>
     );
 }
+
+export default connect(mapStateToProps, null)(PanoramaCard);

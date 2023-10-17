@@ -14,9 +14,11 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import {Link} from 'react-router-dom'
 import { useState, useEffect } from "react";
+
 // import Panorama360View from '../components/Panorama360View';
 
-function Home (){
+
+function Home (props){
 
     const [isRefresh, setIsRefresh] = useState<boolean>(false);
     const [searchTitle, setSearchTitle] = useState<string>("");
@@ -31,6 +33,7 @@ function Home (){
     const handleSearchTitleChange = (e:any) => {
         setSearchTitle(e.target.value)
     }
+
 
     return (
         <>

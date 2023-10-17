@@ -41,13 +41,12 @@ public partial class AirsquireChallengeDbContext : DbContext
 
         modelBuilder.Entity<PanoramaBookmark>(entity =>
         {
-            entity.HasKey(e => e.PanoramaId);
+            entity.HasKey(e => new { e.PanoramaId, e.Username });
 
-            entity.Property(e => e.PanoramaId).ValueGeneratedNever();
             entity.Property(e => e.Username).HasMaxLength(50);
 
-            entity.HasOne(d => d.Panorama).WithOne(p => p.PanoramaBookmark)
-                .HasForeignKey<PanoramaBookmark>(d => d.PanoramaId)
+            entity.HasOne(d => d.Panorama).WithMany(p => p.PanoramaBookmarks)
+                .HasForeignKey(d => d.PanoramaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PanoramaBookmarks_Panoramas");
         });

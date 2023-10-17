@@ -15,5 +15,5 @@ public partial class Panorama
 
     public DateTime? UploadedDate { get; set; }
 
-    public virtual PanoramaBookmark? PanoramaBookmark { get; set; }
+    public virtual ICollection<PanoramaBookmark> PanoramaBookmarks { get; set; } = new List<PanoramaBookmark>();
 }

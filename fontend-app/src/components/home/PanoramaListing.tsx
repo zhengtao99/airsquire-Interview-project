@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import api from "../../hooks/request";
 import PanoramaCard from './PanoramaCard';
 import { apiEndPoint_Panoramas } from '../../config';
@@ -10,31 +10,41 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import ConnectionError from '../ConnectionError';
+import {connect} from "react-redux";
+import {store} from '../../redux/store';
 
 interface ParonomaListingProps{
   isRefresh: boolean,
   searchTitle: string
 }
 
+const mapStateToProps = (state) =>{
+  return {
+      username: state.username
+  }
+}
+
+
 function PanoramaListing(props:ParonomaListingProps){
-  
-  const username = "zhengtao";
-  const url = apiEndPoint_Panoramas + `?username=${username}`;
+
+  const isFirstRender = useRef(true);
   const [isBookedmarkedChecked, setIsBookmarkedChecked] = useState<boolean>(true);
   const [isUnbookmarkedChecked, setIsUnbookmarkedChecked] = useState<boolean>(true);
   const [bookmarkedCount, setBookmarkedCount]  = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
 
   const [data, setData] = useState<any>([]);
   const [filteredData, setFilteredData] = useState<any>([]);
   
+  // refresh when search clicked
   useEffect(() => {
     refresh();
   }, [props.isRefresh])
 
   function refresh(){
-    
+    setIsLoading(true);
+    const url = apiEndPoint_Panoramas + `?username=${props.username}`;
     setIsError(false);
 
     let finalUrl = url;
@@ -43,8 +53,8 @@ function PanoramaListing(props:ParonomaListingProps){
         finalUrl = url + `&title=${props.searchTitle}`;
     }
     (async function() {
-      setIsLoading(true);
-
+      
+      console.log("start loading ", isLoading);
       // simulate loading
       await sleep(1000);
       try{
@@ -53,12 +63,18 @@ function PanoramaListing(props:ParonomaListingProps){
       }catch{
         setIsError(true);
       }
-      setIsLoading(false);
     })()
   }
 
+  // refresh when username changed
+  useEffect(()=>{
+    refresh();
+  },[props.username])
+
+
+  // filtered by bookmarks and un-bookmarks
   useEffect(() => {
-    console.log("triggered")
+    
     setBookmarkedCount([...data].filter(x => x.isBookmarked).length)
     if(isBookedmarkedChecked && isUnbookmarkedChecked)
     {
@@ -75,9 +91,21 @@ function PanoramaListing(props:ParonomaListingProps){
     else{
       setFilteredData([])
     }
-   
+    if(!isFirstRender.current){
+      setIsLoading(false);
+    }
+    else{
+      isFirstRender.current = false;
+    }
+    
   }, [data, isBookedmarkedChecked, isUnbookmarkedChecked])
   
+
+  useEffect(() => {
+    // only stop loading after mounting
+    
+  }, [filteredData])
+
   const handleBookmarkedCheckedChange = (e:any) => {
     setIsBookmarkedChecked(!isBookedmarkedChecked);
   }
@@ -111,7 +139,6 @@ function PanoramaListing(props:ParonomaListingProps){
               </Container>
             ):(
               filteredData.map((panorama:any) => {
-              console.log(panorama)
               return(
                 <Grid item xs={6} md={4}  key={panorama.panoramaId}>
                   <PanoramaCard 
@@ -134,4 +161,4 @@ function PanoramaListing(props:ParonomaListingProps){
     )
 }
 
-export default PanoramaListing;
+export default connect(mapStateToProps, null)(PanoramaListing);

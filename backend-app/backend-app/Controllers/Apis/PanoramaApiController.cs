@@ -45,9 +45,9 @@ namespace backend_app.Controllers.Apis
                         PanoramaTitle = z.PanoramaTitle,
                         UploadedBy = z.UploadedBy,
                         UploadedDate = UtilitiesController.TimeDescription(((DateTime)z.UploadedDate).ToLocalTime()),
-                        IsBookmarked = y.FirstOrDefault() == null ? false :
-                        paramModel.Username == "" ? false :
-                                        y.FirstOrDefault().Username.ToLower() == paramModel.Username.ToLower() ? y.FirstOrDefault().IsBookmarked : false
+                        IsBookmarked =  paramModel.Username == "" ? false :
+                                        y.Where(x=>x.Username.ToLower() == paramModel.Username.ToLower()).FirstOrDefault() != null ?
+                                        y.Where(x => x.Username.ToLower() == paramModel.Username.ToLower()).FirstOrDefault().IsBookmarked : false
 
                     }).ToList();
 

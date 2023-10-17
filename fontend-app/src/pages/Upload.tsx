@@ -14,8 +14,18 @@ import {apiEndPoint_Panoramas} from "../config";
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import { sleep } from '../utilities';
+import {connect} from "react-redux";
 
-function Upload(){
+
+
+
+const mapStateToProps = (state) =>{
+    return {
+        username: state.username
+    }
+}
+
+function Upload(props){
     const [selectedImage, setSelectedImage] = useState<any>();
     const [panoramaTitle, setPanoramaTitle] = useState<string>("");
     const [errorMsg, setErrorMsg] = useState<string>("");
@@ -26,7 +36,6 @@ function Upload(){
         setIsSuccess(false);
         setErrorMsg("");
         setSelectedImage(e.target.files[0]);
-      
     }
 
     function handlePanoramaTitleClick(e:any)
@@ -54,12 +63,11 @@ function Upload(){
 
     function handleUploadClick(e:any){
         e.preventDefault();  
+        console.log(props.username)
         const errMsg = validateFile();
         if(errMsg != "")
         {
-            console.log("yes")
             return;
-
         }
 
         console.log(selectedImage);
@@ -68,7 +76,7 @@ function Upload(){
 
         formData.append('File', selectedImage);
         formData.append('PanoramaTitle', panoramaTitle);
-        formData.append('UploadedBy', "zhengtao");
+        formData.append('UploadedBy', props.username);
 
 
         (async function() {
@@ -145,4 +153,4 @@ function Upload(){
     )
 }
 
-export default Upload;
+export default connect(mapStateToProps, null)(Upload);
