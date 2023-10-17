@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import {Link} from 'react-router-dom'
 import { useState, useEffect } from "react";
+// import Panorama360View from '../components/Panorama360View';
 
 function Home (){
 

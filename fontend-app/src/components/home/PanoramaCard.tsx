@@ -2,6 +2,7 @@ import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
+import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
@@ -14,6 +15,7 @@ import {apiEndPoint_PanoramaBookmarks} from "../../config";
 import axios from 'axios';
 import Chip from '@mui/material-next/Chip';
 import Stack from '@mui/material/Stack';
+import Panorama360View from "../Panorama360View";
 
 interface PanoramaCardProps {
     panoramaId: number,
@@ -34,6 +36,7 @@ export default function PanoramaCard(props: PanoramaCardProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [fileType, setFileType] = useState<string>("");
     const [imageDimension, setImageDimension] = useState<string>("");
+    const [isOpenDialogue, setIsOpenDialogue]= useState<boolean>(false);
 
     useEffect(()=>{
         if(props.isBookmarked)
@@ -57,11 +60,11 @@ export default function PanoramaCard(props: PanoramaCardProps) {
             try{
                 let image = new Image()
                 image.src = props.imagePath.replace("panoramas-small", "panoramas");
-                await image.decode()     
+                await image.decode();
                 setImageDimension(`${image.width} x ${image.height}`);
             }
-            catch{
-
+            catch(err:any){
+                console.log(err.message)
             }
         })()
     }, [])
@@ -124,43 +127,53 @@ export default function PanoramaCard(props: PanoramaCardProps) {
         })()
     }
 
+
+    const handleCardClick = (e:any) => {
+       setIsOpenDialogue(true);
+    }   
+
     return (
-        <Card sx={{ maxWidth: 345 }}>
-        <CardMedia
-            sx={{ height: 140 }}
-            image={props.imagePath}
-            title={props.panoramaTitle}
-        />
-        <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-                {props.panoramaTitle}
-            </Typography>
-            <Stack direction="row" spacing={1} sx={{mb:2}}>
-                <Chip size="small" label={fileType} color="tertiary" variant="filled" />
-                {imageDimension != "" &&
-                    <Chip size="small" label={imageDimension} color="primary" variant="filled" />
-                }
-            </Stack>
-            <Typography variant="body2" color="text.secondary">
-                uploaded by {props.uploadedBy}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-            {props.uploadedDate}
-            </Typography>
-        </CardContent>
-        <CardActions>
-            <Button size="small" onClick={handleBookmarkClick}>
-              
-                {isLoading ? (
-                    <CircularProgress size={12} thickness={10}/>
-                ):(
-                    <Rating name="customized-10" defaultValue={0} value={isBookmarked!} max={1} />
-                )}
-                Bookmark
-               
-            </Button> 
-            <Button onClick={handleDownloadClick} size="small">Download</Button>
-        </CardActions>
-        </Card>
+        <>
+            <Card sx={{ maxWidth: 345 }}>
+                <CardActionArea onClick={handleCardClick}>
+                <CardMedia
+                    sx={{ height: 140 }}
+                    image={props.imagePath}
+                    title={props.panoramaTitle}
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                        {props.panoramaTitle}
+                    </Typography>
+                    <Stack direction="row" spacing={1} sx={{mb:2}}>
+                        <Chip size="small" label={fileType} color="tertiary" variant="filled" />
+                        {imageDimension != "" &&
+                            <Chip size="small" label={imageDimension} color="primary" variant="filled" />
+                        }
+                    </Stack>
+                    <Typography variant="body2" color="text.secondary">
+                        uploaded by {props.uploadedBy}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                    {props.uploadedDate}
+                    </Typography>
+                </CardContent>
+                </CardActionArea>
+                <CardActions>
+                    <Button size="small" onClick={handleBookmarkClick}>
+                    
+                        {isLoading ? (
+                            <CircularProgress size={12} thickness={10}/>
+                        ):(
+                            <Rating name="customized-10" defaultValue={0} value={isBookmarked!} max={1} />
+                        )}
+                        Bookmark
+                    
+                    </Button> 
+                    <Button onClick={handleDownloadClick} size="small">Download</Button>
+                </CardActions>
+            </Card>
+            <Panorama360View imagePath = {props.imagePath.replace("panoramas-small", "panoramas")} isOpenDialogue={isOpenDialogue} setIsOpenDialogue ={setIsOpenDialogue}/>
+        </>
     );
 }
