@@ -9,6 +9,7 @@ import Container from '@mui/material/Container';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import ConnectionError from '../ConnectionError';
 
 interface ParonomaListingProps{
   isRefresh: boolean,
@@ -23,6 +24,7 @@ function PanoramaListing(props:ParonomaListingProps){
   const [isUnbookmarkedChecked, setIsUnbookmarkedChecked] = useState<boolean>(true);
   const [bookmarkedCount, setBookmarkedCount]  = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
 
   const [data, setData] = useState<any>([]);
   const [filteredData, setFilteredData] = useState<any>([]);
@@ -32,6 +34,9 @@ function PanoramaListing(props:ParonomaListingProps){
   }, [props.isRefresh])
 
   function refresh(){
+    
+    setIsError(false);
+
     let finalUrl = url;
     if(props.searchTitle != "")
     {
@@ -43,11 +48,10 @@ function PanoramaListing(props:ParonomaListingProps){
       // simulate loading
       await sleep(1000);
       try{
-      const apiData:any = await api.get(finalUrl);
-      setData(apiData);
-     
+        const apiData:any = await api.get(finalUrl);
+        setData(apiData);
       }catch{
-
+        setIsError(true);
       }
       setIsLoading(false);
     })()
@@ -92,7 +96,10 @@ function PanoramaListing(props:ParonomaListingProps){
               </Grid>
             </Grid>
           <Grid container spacing={2}>
-
+            {isError && 
+              <Grid item xs={12} md={12}>
+                <ConnectionError />
+              </Grid>}
             {isLoading ? (
               <Container maxWidth="md" style={{
                 display: 'flex',
