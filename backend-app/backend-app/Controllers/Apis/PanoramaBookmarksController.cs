@@ -1,17 +1,17 @@
 using backend_app.Models;
 using Microsoft.AspNetCore.Mvc;
-using backend_app.Models.PanoramaBookmarkApiModels;
+using backend_app.Models.Api.PanoramaBookmarksModels;
 
 namespace backend_app.Controllers.Apis
 {
     [ApiController]
 
     [Route("api/panoramabookmarks")]
-    public class PanoramaBookmarkApiController : ControllerBase
+    public class PanoramaBookmarksController : ControllerBase
     {
-        private readonly ILogger<PanoramaApiController> _logger;
+        private readonly ILogger<PanoramasController> _logger;
 
-        public PanoramaBookmarkApiController(ILogger<PanoramaApiController> logger)
+        public PanoramaBookmarksController(ILogger<PanoramasController> logger)
         {
             _logger = logger;
         }

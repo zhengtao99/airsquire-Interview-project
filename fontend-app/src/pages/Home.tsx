@@ -44,9 +44,11 @@ function Home (props){
                             Upload
                         </OrangeButton>
                     </Link>
+                    <Link to='/analytics'>
                     <PurpleButton component="label" variant="contained" startIcon={<BarChartIcon />}>
                         Analytics
                     </PurpleButton>
+                    </Link>
                 </Grid>
                 <Grid item xs={0} md={4}>
 

@@ -1,6 +1,6 @@
 using backend_app.Models;
 using Microsoft.AspNetCore.Mvc;
-using backend_app.Models.PanoramaApiModels;
+using backend_app.Models.Api.PanoramasModels;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 using Leadtools.Codecs;
@@ -10,11 +10,11 @@ namespace backend_app.Controllers.Apis
     [ApiController]
 
     [Route("api/panoramas")]
-    public class PanoramaApiController : ControllerBase
+    public class PanoramasController : ControllerBase
     {
-        private readonly ILogger<PanoramaApiController> _logger;
+        private readonly ILogger<PanoramasController> _logger;
 
-        public PanoramaApiController(ILogger<PanoramaApiController> logger)
+        public PanoramasController(ILogger<PanoramasController> logger)
         {
             _logger = logger;
         }

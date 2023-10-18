@@ -1,4 +1,4 @@
-﻿namespace backend_app.Models.PanoramaApiModels
+﻿namespace backend_app.Models.Api.PanoramasModels
 {
     public class GetPanoramas
     {

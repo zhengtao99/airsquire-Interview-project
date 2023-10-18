@@ -43,9 +43,12 @@ function PanoramaListing(props:ParonomaListingProps){
   }, [props.isRefresh])
 
   function refresh(){
+
     setIsLoading(true);
-    const url = apiEndPoint_Panoramas + `?username=${props.username}`;
     setIsError(false);
+    
+    const url = apiEndPoint_Panoramas + `?username=${props.username}`;
+    
 
     let finalUrl = url;
     if(props.searchTitle != "")
@@ -54,7 +57,6 @@ function PanoramaListing(props:ParonomaListingProps){
     }
     (async function() {
       
-      console.log("start loading ", isLoading);
       // simulate loading
       await sleep(1000);
       try{
@@ -62,6 +64,7 @@ function PanoramaListing(props:ParonomaListingProps){
         setData(apiData);
       }catch{
         setIsError(true);
+        setIsLoading(false);
       }
     })()
   }
@@ -91,6 +94,8 @@ function PanoramaListing(props:ParonomaListingProps){
     else{
       setFilteredData([])
     }
+
+    // only stop loading after mounting
     if(!isFirstRender.current){
       setIsLoading(false);
     }
@@ -100,11 +105,6 @@ function PanoramaListing(props:ParonomaListingProps){
     
   }, [data, isBookedmarkedChecked, isUnbookmarkedChecked])
   
-
-  useEffect(() => {
-    // only stop loading after mounting
-    
-  }, [filteredData])
 
   const handleBookmarkedCheckedChange = (e:any) => {
     setIsBookmarkedChecked(!isBookedmarkedChecked);

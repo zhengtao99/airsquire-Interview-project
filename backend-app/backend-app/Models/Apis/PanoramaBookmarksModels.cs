@@ -1,4 +1,4 @@
-﻿namespace backend_app.Models.PanoramaBookmarkApiModels
+﻿namespace backend_app.Models.Api.PanoramaBookmarksModels
 {
     public class UpdatePanoromaBookmark
     {

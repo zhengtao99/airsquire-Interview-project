@@ -9,6 +9,9 @@ import Layout from './pages/Layout';
 import Home  from './pages/Home';
 import NoPage  from './pages/NoPage';
 import Upload from './pages/Upload';
+import Analytics from './pages/Analytics';
+
+
 function App() {
 
 
@@ -21,6 +24,7 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="/upload" element={<Upload />} />
+              <Route path="/analytics" element={<Analytics />} />
               <Route path="*" element={<NoPage />} />
             </Route>
           </Routes>
