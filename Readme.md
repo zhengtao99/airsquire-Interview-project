@@ -51,3 +51,24 @@ Need to show and introduce the project demo in the second round interview.
 - You can use this [boilerplate](https://github.com/AirGo3D/frontend-boilerplate) to bootstrap front-end project
 - You can use this [boilerplate](https://github.com/AirGo3D/nodejs-boilerplate) to bootstrap back-end project
 - You can find panorama images from this repo
+
+
+# Tech Stack Used
+You may be able to use other versions of the software. Versions stated below are what i have used for reference.
+
+## Reactjs
+- Version: Nodejs v18.18.0
+- To start app, enter command 'npm i' to install all the modules follow by 'npm start'.
+
+## .NET Core Framework
+- Version: .NET 6.0
+- Visual Studio 2022 Enterprise
+- Configure connectionstring in Models.AirsquireChallengeDbContext.cs file to match your SQL Server details.
+- Click the play button.
+
+## SQL Server
+- Version: SQL Server 2022
+- If you dont have any existing server, create new SQL Server named 'SQLExpress'.
+- Install Microsoft SQL Server Management Studio 2022 to connect to the SQL Server.
+- After successfully connecting, under 'Databases' right-click restore database and select 'AirsquireChallengeDB.bak' in the project's root directory.
+

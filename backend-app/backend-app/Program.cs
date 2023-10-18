@@ -11,11 +11,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors();
 
-//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
-//{
-//    build.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
-//}));
-
 
 var app = builder.Build();
 
@@ -50,7 +45,7 @@ app.UseStaticFiles(new StaticFileOptions
 //});
 
 
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins(new string[] { "http://localhost:3000", "http://192.168.1.167:3000" }));
 
 app.UseHttpsRedirection();
 
